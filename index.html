@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="No DOM, No Cry: How Grounded VLMs Outperform Specialized CAPTCHA Classifiers">
+  <meta name="keywords" content="CAPTCHA, VLM, YOLO, GUI Agents, Computer Vision">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>No DOM, No Cry: How Grounded VLMs Outperform Specialized CAPTCHA Classifiers</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item" href="https://nodomnocry.github.io">
+      <span class="icon">
+        <i class="fas fa-home"></i>
+      </span>
+      <span class="has-text-weight-bold">No DOM, No Cry</span>
+    </a>
+
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarMenu">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="navbarMenu" class="navbar-menu">
+    <div class="navbar-start">
+      <a class="navbar-item" href="#abstract">
+        Abstract
+      </a>
+      <a class="navbar-item" href="#method">
+        Method
+      </a>
+      <a class="navbar-item" href="#results">
+        Results
+      </a>
+      <a class="navbar-item" href="#BibTeX">
+        BibTeX
+      </a>
+    </div>
+
+    <div class="navbar-end">
+      <div class="navbar-item">
+        <div class="buttons">
+          <a class="button is-light" href="./captcha_paper_version_november-8.pdf">
+            <span class="icon">
+              <i class="fas fa-file-pdf"></i>
+            </span>
+            <span>Paper</span>
+          </a>
+          <a class="button is-light" href="#" disabled>
+            <span class="icon">
+              <i class="fab fa-github"></i>
+            </span>
+            <span>Code</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">No DOM, No Cry: How Grounded VLMs Outperform Specialized CAPTCHA Classifiers</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              Anonymous Authors
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Paper under review</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              
+              <span class="link-block">
+                <a href="./captcha_paper_version_november-8.pdf"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code (Coming Soon)</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="hero-body" style="max-width: none;">
+      <h2 class="title is-3 has-text-centered">Live Demonstrations</h2>
+      <h2 class="subtitle has-text-centered">
+        Real-time demonstrations of No DOM, No Cry: from YOLO-based UI detection to puzzle solving without DOM access.
+      </h2>
+
+      <div id="demo-carousel" class="carousel">
+        <!-- Demo 1: YOLO Detection -->
+        <div class="item item-high">
+          <div class="demo-wrapper">
+            <div class="demo-container">
+              <video id="high-video" autoplay muted loop playsinline controls height="100%" data-duration="1.6" preload="auto">
+                <source src="./demos/high.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="timer-legend">
+              <div class="timer-content">
+                <div class="timer-label">YOLO UI Detection Model Bounding Boxes </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Demo 2: YOLO Solver -->
+        <div class="item item-yolo">
+          <div class="demo-wrapper">
+            <div class="demo-container">
+              <video id="yolo-video" autoplay muted loop playsinline controls height="100%" data-duration="8.2" preload="auto">
+                <source src="./demos/yolo_solver.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="timer-legend">
+              <div class="timer-content">
+                <div class="timer-label">YOLO Solver</div>
+                <div class="timer-value" id="yolo-timer">0.0s</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Demo 3: VLM Solver -->
+        <div class="item item-llm">
+          <div class="demo-wrapper">
+            <div class="demo-container">
+              <video id="llm-video" autoplay muted loop playsinline controls height="100%" data-duration="18.7" preload="auto">
+                <source src="./demos/llm_solver.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="timer-legend">
+              <div class="timer-content">
+                <div class="timer-label">GUI Agent based Solver</div>
+                <div class="timer-value" id="llm-timer">0.0s</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Demo 4: Hybrid Model with Tor Browser -->
+        <div class="item item-hybrid">
+          <div class="demo-wrapper">
+            <div class="demo-container">
+              <video id="hybrid-video" autoplay muted loop playsinline controls height="100%" data-duration="104.5" preload="auto">
+                <source src="./demos/tor_browser_hybrid.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="timer-legend">
+              <div class="timer-content">
+                <div class="timer-label">Hybrid Model on Tor Browser - Highest Risk Score</div>
+                <div class="timer-value" id="hybrid-timer">0.0s</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="has-text-centered is-size-7" style="margin-top: 1rem; color: #888;">
+        Videos show real-time solving purely from screenshots (No dom access needed) without speedup.<br>
+        Note: Even with correct solutions, CAPTCHAs may be presented multiple rounds if risk score is high as illustrated on Tor Browser.
+      </p>
+  </div>
+</section>
+
+
+<section class="section" id="abstract">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          While YOLO-based models achieve high accuracy with high speed in solving CAPTCHA puzzles, their dependance on DOM access to locate UI elements on the screen prevents integration with fully visual GUI agents that operates with screenshots. We introduce a DOM-free, screenshot-only architecture that combines YOLO's fast pattern recognition with advanced reasoning of VLM-based GUI agents. Our system employs a fine-tuned YOLOv8 detector for UI element localization and then dynamically routing extracted UI elements to either specialized YOLO models or a Qwen-7B Vision-Language Model (VLM). Our experiments reveal fundamentally different inductive biases between YOLO and VLM approaches such that YOLO excels at detecting structured patterns and achieves high recall on classes defined by distinctive visual patterns. In contrast, VLM exhibits concrete object bias, often prioritizing discrete entities (even secondary, occluded or hallucinated ones) over dominant surface patterns but it demonstrates superior zero-shot reasoning capabilities. VLM correctly identifies previously unsupported categories by fine-tuned YOLO models and distinguishes structurally similar objects that confuse YOLO models. Combining these strengths of both models, our hybrid strategy achieves 86.85% macro-averaged recall (+24.2%) and 89.30% overall accuracy (+1.6%) without fine-tuning VLM on CAPTCHA images. Furthermore, we find that YOLOv8x-mask outperforms GUI agents on segmentation tasks (F1: 0.818 vs. 0.768) by producing pixel level masks which current GUI agents lack. These findings demonstrate that augmenting VLMs with specialized detectors allows agents to take advantage of high-speed accuracy of discriminative models without sacrificing its semantic reasoning generalization capabilities, suggesting that CAPTCHA is no longer a viable defense against automation in the emerging era of visually grounded AI agents.
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- CAPTCHA Types. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">reCAPTCHA v2 Challenge Types</h2>
+
+        <div class="columns is-centered">
+          <div class="column">
+            <div class="content">
+              <img src="./figs/classification.png" alt="Classification"/>
+              <p class="has-text-centered">
+                <strong>Classification (3×3):</strong> Select entire tiles containing target object
+              </p>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="content">
+              <img src="./figs/segmentation.png" alt="Segmentation"/>
+              <p class="has-text-centered">
+                <strong>Segmentation (4×4):</strong> Click squares overlapping target object
+              </p>
+            </div>
+          </div>
+
+          <div class="column">
+            <div class="content">
+              <img src="./figs/dynamic_captcha.png" alt="Dynamic"/>
+              <p class="has-text-centered">
+                <strong>Dynamic:</strong> Iteratively select until none remain
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!--/ CAPTCHA Types. -->
+
+    <!-- Method. -->
+    <div class="columns is-centered" id="method">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Method</h2>
+
+        <h3 class="title is-4">Architecture Overview</h3>
+        <div class="content has-text-justified">
+          <p>
+            Our hybrid architecture combines three key components:
+          </p>
+          <ol>
+            <li><strong>Fine-tuned YOLOv8 Detector:</strong> Specialized for CAPTCHA UI elements (captcha area, cells, buttons)</li>
+            <li><strong>Finite-State Controller:</strong> Coordinates detection, solving, verification and recovery</li>
+            <li><strong>Hybrid Solving Engine:</strong> Routes to either YOLO classifiers (fast, high-precision) or VLM (semantic reasoning, zero-shot)</li>
+          </ol>
+        </div>
+
+        <div class="columns is-centered">
+          <div class="column">
+            <img src="./captcha_classification_pipeline.png" alt="Classification Pipeline"/>
+            <p class="has-text-centered"><strong>Classification Pipeline:</strong> Independent per-cell classification</p>
+          </div>
+          <div class="column">
+            <img src="./captcha_pipeline_v4.png" alt="Segmentation Pipeline"/>
+            <p class="has-text-centered"><strong>Segmentation Pipeline:</strong> Concatenated grid with region mapping</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <!--/ Method. -->
+
+  </div>
+</section>
+
+
+<section class="section" id="results">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Results</h2>
+
+        <!-- Performance Metrics. -->
+        <h3 class="title is-4">Classification Performance</h3>
+        <div class="content has-text-justified">
+          <p>
+            Our hybrid approach outperforms both YOLO-only and VLM-only solutions.
+          </p>
+        </div>
+
+        <div class="columns is-centered">
+          <div class="column">
+            <div class="notification is-info is-light">
+              <p class="title is-1 has-text-centered">89.30%</p>
+              <p class="subtitle is-5 has-text-centered">Overall Accuracy<br/><span class="has-text-success">+1.6% improvement over baseline YOLO</span></p>
+            </div>
+          </div>
+          <div class="column">
+            <div class="notification is-success is-light">
+              <p class="title is-1 has-text-centered">86.85%</p>
+              <p class="subtitle is-5 has-text-centered">Macro-Averaged Recall<br/><span class="has-text-success">+24.2% improvement over baseline YOLO</span></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Confusion Matrices. -->
+        <h3 class="title is-4">Confusion Matrix Comparison</h3>
+        <div class="columns is-centered">
+          <div class="column">
+            <img src="./figs/yolo_confusion_matrix_v10.png" alt="YOLO Confusion Matrix"/>
+            <p class="has-text-centered"><strong>YOLO Classifier</strong><br/>87.73% overall, 62.62% macro accuracy</p>
+          </div>
+          <div class="column">
+            <img src="./figs/vlm_confusion_matrix_v10.png" alt="VLM Confusion Matrix"/>
+            <p class="has-text-centered"><strong>VLM GUI Agent</strong><br/>73.36% overall, 78.62% macro accuracy</p>
+          </div>
+        </div>
+
+        <!-- Mask vs BBox. -->
+        <h3 class="title is-4">Segmentation: Masks vs Bounding Boxes</h3>
+        <div class="content has-text-justified">
+          <p>
+            YOLO masks significantly outperform bounding boxes by following object boundaries precisely, improving precision by ~10% across models.
+          </p>
+        </div>
+        <div class="columns is-centered">
+          <div class="column is-three-quarters">
+            <img src="./segmentation_mask_vs_bbox.png" alt="Mask vs BBox"/>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Key Findings</h2>
+
+        <div class="content has-text-justified">
+
+          <h3 class="title is-4">YOLO Excels at Pattern Recognition</h3>
+          <p>High recall on texture-heavy classes (Crosswalk: 93.0%, Bridge: 91.1%) and common objects (Bus: 94.5%, Car: 87.6%)</p>
+
+          <h3 class="title is-4">VLM Demonstrates Zero-Shot Reasoning</h3>
+          <p>High recall on rare classes (Boat, Taxi, Tractor), on semantically distinct objects and has an ability to distinguish structurally similar objects that confuse YOLO</p>
+
+          <h3 class="title is-4">Latency Trade-offs</h3>
+          <p>YOLO: ~4.4ms per cell, VLM: ~225ms per cell. Hybrid routing uses YOLO for common classes, VLM for edge cases.</p>
+
+          <h3 class="title is-4">Different Inductive Biases</h3>
+          <p><strong>YOLO:</strong> Pattern-matching, structural similarity<br/>
+             <strong>VLM:</strong> Semantic reasoning, object-centric bias, prone to over-interpretation</p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{anonymous2025nodom,
+  title={No DOM, No Cry: How Grounded VLMs Outperform Specialized CAPTCHA Classifiers},
+  author={Anonymous},
+  year={2025}
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./captcha_paper_version_november-8.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="#" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p class="has-text-centered">
+            This research is conducted for academic purposes. Please use responsibly.
+          </p>
+          <p class="has-text-centered">
+            Website template borrowed from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Live Counter for Demo Videos
+
+// Global function to force video to play
+function forcePlay(video) {
+  if (video) {
+    video.muted = true;
+    video.volume = 0;
+
+    if (video.paused) {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          console.log('✓ Playing:', video.id);
+        }).catch(e => {
+          console.log('✗ Blocked:', video.id, '-', e.message);
+        });
+      }
+    }
+  }
+}
+
+// Play all videos function
+function playAllVideos() {
+  const videoIds = ['high-video', 'yolo-video', 'llm-video', 'hybrid-video'];
+  console.log('Attempting to play all videos...');
+  videoIds.forEach(id => {
+    const video = document.getElementById(id);
+    if (video) {
+      forcePlay(video);
+    }
+  });
+}
+
+// Try to play immediately (even before DOM is fully loaded)
+setTimeout(playAllVideos, 100);
+setTimeout(playAllVideos, 300);
+setTimeout(playAllVideos, 600);
+setTimeout(playAllVideos, 1000);
+
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Function to setup video with timer
+  function setupVideoWithTimer(videoId, timerId) {
+    const video = document.getElementById(videoId);
+    const timer = document.getElementById(timerId);
+
+    if (video && timer) {
+      // Force play immediately
+      forcePlay(video);
+
+      // Try to play on multiple events
+      video.addEventListener('loadedmetadata', () => forcePlay(video));
+      video.addEventListener('loadeddata', () => forcePlay(video));
+      video.addEventListener('canplay', () => forcePlay(video));
+      video.addEventListener('canplaythrough', () => forcePlay(video));
+
+      // Update timer as video plays
+      video.addEventListener('timeupdate', function() {
+        const currentTime = video.currentTime;
+        const displayTime = currentTime.toFixed(1);
+        timer.textContent = displayTime + 's';
+
+        if (!video.paused) {
+          timer.classList.add('counting');
+        } else {
+          timer.classList.remove('counting');
+        }
+      });
+
+      // Reset counter when video ends or loops
+      video.addEventListener('ended', function() {
+        const duration = video.getAttribute('data-duration') || video.duration.toFixed(1);
+        timer.textContent = duration + 's';
+        timer.classList.remove('counting');
+      });
+
+      // Start from 0 when video plays
+      video.addEventListener('play', function() {
+        timer.classList.add('counting');
+      });
+
+      // Prevent pause - keep video playing continuously
+      video.addEventListener('pause', function() {
+        setTimeout(() => forcePlay(video), 50);
+      });
+
+      // Aggressive keep-alive
+      setInterval(() => {
+        if (video.paused && !video.ended) {
+          forcePlay(video);
+        }
+      }, 500);
+    }
+  }
+
+  // Function to setup video without timer
+  function setupVideoOnly(videoId) {
+    const video = document.getElementById(videoId);
+
+    if (video) {
+      // Force play immediately
+      forcePlay(video);
+
+      // Try to play on multiple events
+      video.addEventListener('loadedmetadata', () => forcePlay(video));
+      video.addEventListener('loadeddata', () => forcePlay(video));
+      video.addEventListener('canplay', () => forcePlay(video));
+      video.addEventListener('canplaythrough', () => forcePlay(video));
+
+      // Prevent pause
+      video.addEventListener('pause', function() {
+        setTimeout(() => forcePlay(video), 50);
+      });
+
+      // Aggressive keep-alive
+      setInterval(() => {
+        if (video.paused && !video.ended) {
+          forcePlay(video);
+        }
+      }, 500);
+    }
+  }
+
+  // Setup all videos
+  setupVideoOnly('high-video');
+  setupVideoWithTimer('yolo-video', 'yolo-timer');
+  setupVideoWithTimer('llm-video', 'llm-timer');
+  setupVideoWithTimer('hybrid-video', 'hybrid-timer');
+
+  // Play all videos after setup
+  playAllVideos();
+});
+
+// Force play on ANY user interaction
+['click', 'touchstart', 'keydown', 'mousemove'].forEach(eventType => {
+  document.addEventListener(eventType, function() {
+    console.log('User interaction detected, playing all videos...');
+    playAllVideos();
+  }, { once: true });
+});
+
+// Also try when window fully loads
+window.addEventListener('load', function() {
+  console.log('Window loaded, playing all videos...');
+  playAllVideos();
+});
+</script>
+
+</body>
+</html>
